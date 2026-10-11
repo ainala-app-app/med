@@ -361,7 +361,7 @@ export default function App() {
         )}
         {tab === "library" && <LibraryScreen />}
         {tab === "stories" && <StoriesScreen />}
-        {tab === "profile" && <ProfileScreen profile={profile} onEdit={() => setEditingProfile(true)} onExport={exportAll} onWipe={wipeAll} />}
+        {tab === "profile" && <ProfileScreen profile={profile} onEdit={() => setEditingProfile(true)} onExport={exportAll} />}
         </div>
         )}
         </div>

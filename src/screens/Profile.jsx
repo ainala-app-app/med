@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, Trash2, Edit3, Lock, Shield } from "lucide-react";
+import { Download, Edit3, Lock, Shield, Mail } from "lucide-react";
 import { C } from "../theme/tokens";
 import { ACTIVITY_LEVELS } from "../data/mockData";
 import { formatDay } from "../utils/stats";
@@ -15,14 +15,10 @@ function Row({ label, value }) {
   );
 }
 
-export function ProfileScreen({ profile, onEdit, onExport, onWipe }) {
+export function ProfileScreen({ profile, onEdit, onExport }) {
   const [legalOpen, setLegalOpen] = useState(false);
   const imperial = profile.units === "imperial";
   const activity = ACTIVITY_LEVELS.find((a) => a.id === profile.activityLevel)?.label || "—";
-
-  const wipe = () => {
-    if (window.confirm("Удалить все данные Ainala с этого устройства? Это действие нельзя отменить. Рекомендуем сначала сделать экспорт.")) onWipe();
-  };
 
   return (
     <div className="screen">
@@ -70,15 +66,13 @@ export function ProfileScreen({ profile, onEdit, onExport, onWipe }) {
       <h2 className="h2">Ваши данные</h2>
       <div className="alert info">
         <Lock size={17} style={{ flexShrink: 0, marginTop: 1 }} />
-        <div>Всё хранится только в этом браузере и никуда не отправляется. При очистке данных браузера записи пропадут — делайте экспорт.</div>
+        <div>Всё хранится только в этом браузере и никуда не отправляется. При очистке данных браузера записи пропадут — сохраняйте резервную копию.</div>
       </div>
-      <div className="row" style={{ gap: 8 }}>
-        <button className="btn btn-secondary" style={{ flex: 1 }} onClick={onExport}>
-          <Download size={15} /> Экспорт (JSON)
-        </button>
-        <button className="btn btn-secondary" style={{ flex: 1, color: C.red }} onClick={wipe}>
-          <Trash2 size={15} /> Удалить всё
-        </button>
+      <button className="btn btn-secondary block" onClick={onExport}>
+        <Download size={15} /> Экспорт резервной копии (JSON)
+      </button>
+      <div className="small muted" style={{ marginTop: 10, textAlign: "center", lineHeight: 1.45 }}>
+        Удаление аккаунта и данных — по обращению в поддержку: <a href="mailto:support@ainala.app" style={{ color: C.teal, fontWeight: 600 }}>support@ainala.app</a> или через очистку сайта в настройках браузера.
       </div>
     </div>
   );
