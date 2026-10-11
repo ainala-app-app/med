@@ -6,6 +6,7 @@ import { sanitizeText } from "../utils/security";
 import { dateKey } from "../utils/stats";
 import { analyzeInjuryDescription } from "../services/aiService";
 import { InputRow, Field, BodyMap, PainSlider, PainAdvice, RedFlagAlert, Segmented } from "../components/ui/SharedUI";
+import { LegalModal } from "../components/ui/LegalModal";
 
 const STEPS = ["Знакомство", "Травма", "Этап", "О вас", "Самочувствие"];
 
@@ -13,6 +14,7 @@ export function OnboardingScreen({ onComplete, onShowSos, onCancel, initial }) {
   const [step, setStep] = useState(0);
   const [name, setName] = useState(initial?.name || "");
   const [consent, setConsent] = useState(!!initial);
+  const [showLegal, setShowLegal] = useState(false);
   const [description, setDescription] = useState(initial?.description || "");
   const [part, setPart] = useState(initial?.part || null);
   const [explanation, setExplanation] = useState(null);
@@ -115,7 +117,14 @@ export function OnboardingScreen({ onComplete, onShowSos, onCancel, initial }) {
             <label className="row" style={{ alignItems: "flex-start", gap: 10, fontSize: 13, lineHeight: 1.5, margin: "6px 0 18px", cursor: "pointer" }}>
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, accentColor: C.teal }} />
               <span>
-                Я понимаю, что Ainala — справочный помощник и <strong>не заменяет лечащего врача</strong>. Упражнения выполняю только с разрешения специалиста.
+                Мне исполнилось 18 лет. Я понимаю, что Ainala — справочный трекер и <strong>не заменяет очного лечащего врача</strong>. Упражнения выполняю только с разрешения специалиста. Принимаю{" "}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowLegal(true); }}
+                  style={{ background: "none", border: "none", color: C.teal, fontWeight: 700, padding: 0, cursor: "pointer", textDecoration: "underline", display: "inline" }}
+                >
+                  Условия и Политику конфиденциальности
+                </button>.
               </span>
             </label>
           </>
@@ -242,6 +251,7 @@ export function OnboardingScreen({ onComplete, onShowSos, onCancel, initial }) {
           </button>
         )}
       </div>
+      <LegalModal open={showLegal} onClose={() => setShowLegal(false)} />
     </div>
   );
 }

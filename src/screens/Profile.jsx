@@ -1,9 +1,10 @@
-import React from "react";
-import { Download, Trash2, Edit3, Lock } from "lucide-react";
+import React, { useState } from "react";
+import { Download, Trash2, Edit3, Lock, Shield } from "lucide-react";
 import { C } from "../theme/tokens";
 import { ACTIVITY_LEVELS } from "../data/mockData";
 import { formatDay } from "../utils/stats";
 import { Card, ScreenTitle, BodyMap, Pill } from "../components/ui/SharedUI";
+import { LegalModal } from "../components/ui/LegalModal";
 
 function Row({ label, value }) {
   return (
@@ -15,6 +16,7 @@ function Row({ label, value }) {
 }
 
 export function ProfileScreen({ profile, onEdit, onExport, onWipe }) {
+  const [legalOpen, setLegalOpen] = useState(false);
   const imperial = profile.units === "imperial";
   const activity = ACTIVITY_LEVELS.find((a) => a.id === profile.activityLevel)?.label || "—";
 
@@ -58,6 +60,12 @@ export function ProfileScreen({ profile, onEdit, onExport, onWipe }) {
       <button className="btn btn-soft block" onClick={onEdit}>
         <Edit3 size={15} /> Изменить травму, этап и данные
       </button>
+
+      <button className="btn btn-secondary block" style={{ marginTop: 8 }} onClick={() => setLegalOpen(true)}>
+        <Shield size={15} /> Условия использования и защита данных (152-ФЗ / GDPR)
+      </button>
+
+      <LegalModal open={legalOpen} onClose={() => setLegalOpen(false)} />
 
       <h2 className="h2">Ваши данные</h2>
       <div className="alert info">
