@@ -18,6 +18,8 @@ import { AssistantScreen } from "./screens/Assistant";
 import { CalendarScreen } from "./screens/Calendar";
 import { ProfileScreen } from "./screens/Profile";
 import { DoctorScreen } from "./screens/Doctor";
+import { DoctorCabinetScreen } from "./screens/DoctorCabinet";
+import { AdminPanelScreen } from "./screens/AdminPanel";
 import { LibraryScreen, StoriesScreen } from "./screens/Library";
 import { CalculatorsScreen } from "./screens/Calculators";
 
@@ -84,9 +86,11 @@ export default function App() {
   const [sosOpen, setSosOpen] = useState(false);
   const [guidedId, setGuidedId] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
+  const [role, setRole] = usePersisted("userRole", "user");
+  const [customPlan, setCustomPlan] = usePersisted("customPlan", null);
 
   const today = dateKey();
-  const plan = useMemo(() => buildPlan(profile), [profile]);
+  const plan = useMemo(() => customPlan || buildPlan(profile), [profile, customPlan]);
   const todayDone = done[today] || {};
   const streak = computeStreak(done, today);
   const bestStreak = computeBestStreak(done);
@@ -197,13 +201,40 @@ export default function App() {
         <button className="brand" style={{ background: "none", border: "none", padding: "4px 12px 6px" }} onClick={() => setTab("home")}>
           <span className="brand-mark"><HeartPulse size={17} /></span> Ainala
         </button>
+        <div style={{ display: "flex", gap: 3, background: "rgba(0,0,0,0.05)", padding: 3, borderRadius: 10, margin: "4px 12px 12px" }}>
+          {[
+            { id: "user", label: "Пациент" },
+            { id: "doctor", label: "Врач" },
+            { id: "admin", label: "Админ" },
+          ].map((r) => (
+            <button
+              key={r.id}
+              onClick={() => setRole(r.id)}
+              style={{
+                flex: 1,
+                padding: "5px 6px",
+                fontSize: 11,
+                fontWeight: role === r.id ? 700 : 500,
+                borderRadius: 8,
+                border: "none",
+                background: role === r.id ? "#fff" : "transparent",
+                color: role === r.id ? C.teal : "var(--muted)",
+                boxShadow: role === r.id ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                cursor: "pointer",
+                transition: "all .15s ease",
+              }}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
         {SIDEBAR.map((section) => (
           <React.Fragment key={section.title}>
             <div className="side-section">{section.title}</div>
             {section.items.map((it) => {
               const badge = badges[it.key];
               return (
-                <button key={it.key} className={`side-link ${tab === it.key ? "active" : ""}`} onClick={() => setTab(it.key)} aria-current={tab === it.key ? "page" : undefined}>
+                <button key={it.key} className={`side-link ${tab === it.key ? "active" : ""}`} onClick={() => { setRole("user"); setTab(it.key); }} aria-current={tab === it.key ? "page" : undefined}>
                   <it.icon size={20} strokeWidth={tab === it.key ? 2.4 : 2} />
                   {it.label}
                   {badge > 0 && <span className="side-badge">{badge}</span>}
@@ -214,7 +245,7 @@ export default function App() {
         ))}
         <div style={{ flex: 1, minHeight: 20 }} />
         <PhaseCard profile={profile} onEdit={() => setEditingProfile(true)} />
-        <button className="user-card" style={{ marginTop: 12 }} onClick={() => setTab("profile")}>
+        <button className="user-card" style={{ marginTop: 12 }} onClick={() => { setRole("user"); setTab("profile"); }}>
           <span className="avatar">{profile.name?.[0]?.toUpperCase()}</span>
           <span style={{ flex: 1, minWidth: 0 }}>
             <span style={{ display: "block", fontWeight: 700, fontSize: 15 }}>{profile.name}</span>
@@ -225,18 +256,61 @@ export default function App() {
       </aside>
 
       <header className="app-header">
-        <button className="brand" style={{ background: "none", border: "none", padding: 0 }} onClick={() => setTab("home")}>
+        <button className="brand" style={{ background: "none", border: "none", padding: 0 }} onClick={() => { setRole("user"); setTab("home"); }}>
           <span className="brand-mark"><HeartPulse size={17} /></span> Ainala
         </button>
-        <button className="sos-btn" onClick={() => setSosOpen(true)}>
-          <ShieldAlert size={14} /> SOS
-        </button>
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 2, background: "rgba(0,0,0,0.05)", padding: 2, borderRadius: 8 }}>
+            {[
+              { id: "user", label: "Пациент" },
+              { id: "doctor", label: "Врач" },
+              { id: "admin", label: "Админ" },
+            ].map((r) => (
+              <button
+                key={r.id}
+                onClick={() => setRole(r.id)}
+                style={{
+                  padding: "4px 7px",
+                  fontSize: 10.5,
+                  fontWeight: role === r.id ? 700 : 500,
+                  borderRadius: 6,
+                  border: "none",
+                  background: role === r.id ? "#fff" : "transparent",
+                  color: role === r.id ? C.teal : "var(--muted)",
+                  cursor: "pointer",
+                }}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <button className="sos-btn" onClick={() => setSosOpen(true)}>
+            <ShieldAlert size={14} /> SOS
+          </button>
+        </div>
       </header>
 
       <main className="content">
-        <div className="route" key={tab}>
-        {tab === "home" && (
-          <HomeScreen
+        {role === "doctor" ? (
+          <div className="content-narrow" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+            <DoctorCabinetScreen
+              profile={profile}
+              plan={plan}
+              onUpdatePlan={(newPlan) => setCustomPlan(newPlan)}
+              painLog={painLog}
+              sessions={sessions}
+              diary={diary}
+              adherence={adherence}
+            />
+          </div>
+        ) : role === "admin" ? (
+          <div className="content-narrow" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+            <AdminPanelScreen />
+          </div>
+        ) : (
+          <div className="route" key={tab}>
+          {tab === "home" && (
+            <HomeScreen
             profile={profile}
             plan={plan}
             done={done}
@@ -290,6 +364,7 @@ export default function App() {
         </div>
         )}
         </div>
+        )}
       </main>
 
       <nav className="bottom-nav" aria-label="Основная навигация">

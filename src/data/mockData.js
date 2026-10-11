@@ -1,4 +1,4 @@
-export const BODY_PARTS = ["Колено", "Плечо", "Спина", "Перелом руки", "Голеностоп"];
+export const BODY_PARTS = ["Колено", "Плечо", "Спина", "Рука и кисть", "Голеностоп"];
 export const PHASES = ["Ранняя", "Средняя", "Поздняя"];
 export const ACTIVITY_LEVELS = [
   { id: "low", label: "Щадящий", desc: "Лёгкая бытовая активность, минимум нагрузки" },
@@ -190,11 +190,11 @@ export const EXERCISES = [
     videoUrl: "https://www.youtube.com/results?search_query=glute+bridge+core+rehab",
   },
 
-  // ПЕРЕЛОМ РУКИ
+  // РУКА И КИСТЬ
   {
     id: "ex6",
     name: "Изометрия предплечья и кисти",
-    part: "Перелом руки",
+    part: "Рука и кисть",
     phase: "Ранняя",
     difficulty: "Лёгкая",
     sets: 3,
@@ -215,7 +215,7 @@ export const EXERCISES = [
   {
     id: "ex6_mid",
     name: "Активное сгибание и разгибание запястья",
-    part: "Перелом руки",
+    part: "Рука и кисть",
     phase: "Средняя",
     difficulty: "Лёгкая",
     sets: 3,
@@ -351,7 +351,7 @@ export const COMMUNITY_POSTS = [
   {
     id: "p3",
     author: "Аня",
-    tag: "Перелом руки · 8 недель",
+    tag: "Рука и кисть · 8 недель",
     text: "Возвращаюсь к работе на следующей неделе. Амплитуда в запястье уже 85%. Главное — терпение и регулярность 💛",
     likes: 22,
     status: "approved",

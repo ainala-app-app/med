@@ -286,6 +286,16 @@ function ExercisesCard({ plan, todayDone, onStart, onBrowse, highPain }) {
         </div>
       )}
 
+      {list.length === 0 && (
+        <div className="empty" style={{ padding: "24px 16px", textAlign: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}>
+            <span className="icon-tile" style={{ background: C.tealSoft }}><Dumbbell size={20} color={C.teal} /></span>
+          </div>
+          <div style={{ fontWeight: 600, fontSize: 14 }}>На сегодня упражнений нет</div>
+          <div className="small" style={{ marginTop: 4 }}>Время для спокойного восстановления мышц и суставов.</div>
+        </div>
+      )}
+
       {list.map((ex, i) => {
         const done = !!todayDone[ex.id];
         return (

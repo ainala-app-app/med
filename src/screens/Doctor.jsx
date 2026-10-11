@@ -83,7 +83,16 @@ export function DoctorScreen({ profile, doctor, onSaveDoctor, adherence, painLog
       <ScreenTitle>Врач и отчёт</ScreenTitle>
 
       <Card>
-        {!editing ? (
+        {!doctor.name && !editing ? (
+          <div className="empty" style={{ textAlign: "center", padding: "14px 8px" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}>
+              <span className="icon-tile" style={{ background: C.skySoft }}><Stethoscope size={20} color={C.sky} /></span>
+            </div>
+            <div style={{ fontWeight: 700, fontSize: 14.5 }}>У вас пока нет подключённого врача</div>
+            <div className="small" style={{ marginTop: 4, marginBottom: 12 }}>Укажите контакты специалиста или введите персональный код приглашения.</div>
+            <button className="btn btn-primary sm" onClick={() => setEditing(true)}>+ Подключить врача</button>
+          </div>
+        ) : !editing ? (
           <div className="row" style={{ gap: 12 }}>
             <div className="icon-tile" style={{ background: C.skySoft }}>
               <Stethoscope size={19} color={C.sky} />
@@ -106,7 +115,8 @@ export function DoctorScreen({ profile, doctor, onSaveDoctor, adherence, painLog
           </div>
         ) : (
           <>
-            <div className="eyebrow" style={{ marginBottom: 10 }}>Ваш лечащий врач</div>
+            <div className="eyebrow" style={{ marginBottom: 10 }}>Ваш лечащий врач или реабилитолог</div>
+            <InputRow label="Код врача (приглашение)" value={draft.code || ""} onChange={(v) => setDraft({ ...draft, code: v })} placeholder="Например: DOC-408" />
             <InputRow label="Имя" value={draft.name} onChange={(v) => setDraft({ ...draft, name: v })} placeholder="Иванова Анна Сергеевна" />
             <InputRow label="Специализация" value={draft.specialty} onChange={(v) => setDraft({ ...draft, specialty: v })} placeholder="Травматолог-ортопед" />
             <InputRow label="Телефон" type="tel" value={draft.phone} onChange={(v) => setDraft({ ...draft, phone: v })} placeholder="+7 ___ ___-__-__" />

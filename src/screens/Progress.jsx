@@ -113,6 +113,12 @@ export function ProgressScreen({ profile, painLog, sessions, diary, onAddDiary, 
             <RedFlagAlert flag={lastFlag} onShowSos={onShowSos} />
           </div>
         )}
+        {diary.length === 0 && (
+          <div className="empty" style={{ padding: "16px 8px", marginTop: 12, textAlign: "center" }}>
+            <div style={{ fontWeight: 600, fontSize: 13.5 }}>Пока нет записей о прогрессе</div>
+            <div className="small" style={{ marginTop: 4 }}>Запишите свои ощущения, уровень отёка или самочувствие выше.</div>
+          </div>
+        )}
         {diary.slice(0, 10).map((e) => (
           <div key={e.id} style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.line}` }}>
             <div className="between">
