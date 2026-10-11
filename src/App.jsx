@@ -88,7 +88,6 @@ export default function App() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [role, setRole] = usePersisted("userRole", "user");
   const [customPlan, setCustomPlan] = usePersisted("customPlan", null);
-  const [storageNoticeDismissed, setStorageNoticeDismissed] = usePersisted("storageNoticeDismissed", false);
 
   const today = dateKey();
   const plan = useMemo(() => customPlan || buildPlan(profile), [profile, customPlan]);
@@ -393,46 +392,6 @@ export default function App() {
           </button>
         ))}
       </Modal>
-
-      {!storageNoticeDismissed && (
-        <aside
-          role="region"
-          aria-label="Уведомление о хранении данных"
-          style={{
-            position: "fixed",
-            bottom: "clamp(14px, 8vh, 76px)",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "calc(100% - 24px)",
-            maxWidth: 540,
-            zIndex: 85,
-            background: "rgba(255, 255, 255, 0.96)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: `1px solid ${C.line}`,
-            borderRadius: 14,
-            padding: "10px 14px",
-            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)",
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            fontSize: 12.5,
-            lineHeight: 1.4,
-            color: C.ink,
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <strong>Хранение данных (152-ФЗ / GDPR):</strong> Ainala хранит всё локально на устройстве (localStorage). Сторонние трекеры и cookie отсутствуют.
-          </div>
-          <button
-            className="btn btn-secondary"
-            style={{ padding: "6px 14px", fontSize: 12, flexShrink: 0, fontWeight: 700, background: C.tealSoft, color: C.teal }}
-            onClick={() => setStorageNoticeDismissed(true)}
-          >
-            Понятно
-          </button>
-        </aside>
-      )}
 
       {sos}
     </div>

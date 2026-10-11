@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, Edit3, Lock, Shield, Mail } from "lucide-react";
+import { Download, Edit3 } from "lucide-react";
 import { C } from "../theme/tokens";
 import { ACTIVITY_LEVELS } from "../data/mockData";
 import { formatDay } from "../utils/stats";
@@ -53,27 +53,36 @@ export function ProfileScreen({ profile, onEdit, onExport }) {
         )}
       </Card>
 
-      <button className="btn btn-soft block" onClick={onEdit}>
-        <Edit3 size={15} /> Изменить травму, этап и данные
-      </button>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 14 }}>
+        <button className="btn btn-soft block" onClick={onEdit}>
+          <Edit3 size={15} /> Изменить травму, этап и данные
+        </button>
+        <button className="btn btn-secondary block" onClick={onExport}>
+          <Download size={15} /> Экспорт данных (JSON)
+        </button>
+      </div>
 
-      <button className="btn btn-secondary block" style={{ marginTop: 8 }} onClick={() => setLegalOpen(true)}>
-        <Shield size={15} /> Условия использования и защита данных (152-ФЗ / GDPR)
-      </button>
+      <div style={{ marginTop: 22, paddingBottom: 12, textAlign: "center" }}>
+        <button
+          type="button"
+          onClick={() => setLegalOpen(true)}
+          style={{
+            background: "none",
+            border: "none",
+            color: C.muted,
+            fontSize: 12.5,
+            fontWeight: 500,
+            cursor: "pointer",
+            textDecoration: "underline",
+            textUnderlineOffset: 3,
+            padding: "4px 8px",
+          }}
+        >
+          Условия сервиса и конфиденциальность
+        </button>
+      </div>
 
       <LegalModal open={legalOpen} onClose={() => setLegalOpen(false)} />
-
-      <h2 className="h2">Ваши данные</h2>
-      <div className="alert info">
-        <Lock size={17} style={{ flexShrink: 0, marginTop: 1 }} />
-        <div>Всё хранится только в этом браузере и никуда не отправляется. При очистке данных браузера записи пропадут — сохраняйте резервную копию.</div>
-      </div>
-      <button className="btn btn-secondary block" onClick={onExport}>
-        <Download size={15} /> Экспорт резервной копии (JSON)
-      </button>
-      <div className="small muted" style={{ marginTop: 10, textAlign: "center", lineHeight: 1.45 }}>
-        Удаление аккаунта и данных — по обращению в поддержку: <a href="mailto:support@ainala.app" style={{ color: C.teal, fontWeight: 600 }}>support@ainala.app</a> или через очистку сайта в настройках браузера.
-      </div>
     </div>
   );
 }
